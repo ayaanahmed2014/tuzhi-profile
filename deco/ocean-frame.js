@@ -1,8 +1,4 @@
-/* ════════════════════════════════════════
-   TuZhi Deco — ocean-frame
-   Soft underwater bubbles + wave aura
-   Canvas: 150×150  |  CX/CY: 75  |  R: 52
-   ════════════════════════════════════════ */
+// TuZhi Codes deco name : "ocean-frame"
 (function () {
   const cv = document.getElementById('decoCanvas');
   if (!cv) return;
@@ -18,10 +14,10 @@
 
   let t = 0;
 
-  /* ── bubbles: orbit around avatar ── */
+
   const bubbles = Array.from({ length: 14 }, (_, i) => ({
     angle  : (i / 14) * Math.PI * 2 + Math.random() * 0.4,
-    orbit  : R - 4 + Math.random() * 10,   /* stay within R+10 max */
+    orbit  : R - 4 + Math.random() * 10,
     speed  : (0.006 + Math.random() * 0.009) * (Math.random() < 0.5 ? 1 : -1),
     size   : 2.5 + Math.random() * 4.5,
     phase  : Math.random() * Math.PI * 2,
@@ -29,7 +25,7 @@
     color  : Math.random() < 0.5 ? TEAL : BLUE,
   }));
 
-  /* ── foam dots: small sparkle on ring edge ── */
+
   const foam = Array.from({ length: 10 }, (_, i) => ({
     angle: (i / 10) * Math.PI * 2,
     speed: 0.005 + Math.random() * 0.006,
@@ -37,7 +33,7 @@
     size : 1.2 + Math.random() * 1.6,
   }));
 
-  /* ── rising micro-bubbles inside avatar area ── */
+
   const micro = Array.from({ length: 8 }, () => ({
     x    : CX + (Math.random() - 0.5) * (R * 1.2),
     y    : CY + Math.random() * R * 0.8,
@@ -47,12 +43,12 @@
     drift: (Math.random() - 0.5) * 0.3,
   }));
 
-  /* ── draw single bubble ── */
+
   function drawBubble(x, y, r, alpha, color) {
     ctx.save();
     ctx.globalAlpha = alpha;
 
-    /* fill */
+
     const fill = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.05, x, y, r);
     fill.addColorStop(0, 'rgba(255,255,255,0.55)');
     fill.addColorStop(0.5, color + '55');
@@ -64,7 +60,7 @@
     ctx.shadowBlur = 8;
     ctx.fill();
 
-    /* rim */
+
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.strokeStyle = FOAM;
@@ -72,7 +68,7 @@
     ctx.globalAlpha = alpha * 0.5;
     ctx.stroke();
 
-    /* highlight */
+
     ctx.beginPath();
     ctx.arc(x - r * 0.3, y - r * 0.3, r * 0.28, 0, Math.PI * 2);
     ctx.fillStyle = WHITE;
@@ -87,7 +83,7 @@
     ctx.clearRect(0, 0, W, H);
     t++;
 
-    /* 1. soft wave aura ring */
+
     const auraAlpha = 0.13 + 0.05 * Math.sin(t * 0.03);
     const g = ctx.createRadialGradient(CX, CY, R - 18, CX, CY, R + 2);
     g.addColorStop(0, 'rgba(56,217,192,0)');
@@ -98,7 +94,7 @@
     ctx.fillStyle = g;
     ctx.fill();
 
-    /* 2. secondary inner glow */
+
     const g2 = ctx.createRadialGradient(CX, CY, 0, CX, CY, R - 10);
     g2.addColorStop(0, 'rgba(56,217,192,0.06)');
     g2.addColorStop(1, 'rgba(56,217,192,0)');
@@ -107,11 +103,11 @@
     ctx.fillStyle = g2;
     ctx.fill();
 
-    /* 3. micro rising bubbles (clipped inside avatar area) */
+
     micro.forEach(m => {
       m.y  -= m.speed;
       m.x  += m.drift;
-      /* reset when floated above avatar */
+
       const dx = m.x - CX, dy = m.y - CY;
       if (m.y < CY - R || dx * dx + dy * dy > R * R) {
         m.x = CX + (Math.random() - 0.5) * R * 1.1;
@@ -128,20 +124,20 @@
       ctx.restore();
     });
 
-    /* 4. orbiting bubbles */
+
     bubbles.forEach((b, i) => {
       b.angle += b.speed;
       const bob = Math.sin(t * 0.04 + b.phase) * 2.5;
       const x   = CX + Math.cos(b.angle) * b.orbit;
       const y   = CY + Math.sin(b.angle) * b.orbit + bob;
-      /* keep within canvas — clamp */
+
       const cx2 = Math.max(b.size + 1, Math.min(W - b.size - 1, x));
       const cy2 = Math.max(b.size + 1, Math.min(H - b.size - 1, y));
       const alphaPulse = b.opacity * (0.75 + 0.25 * Math.sin(t * 0.05 + b.phase));
       drawBubble(cx2, cy2, b.size, alphaPulse, b.color);
     });
 
-    /* 5. foam sparkles on ring edge */
+
     foam.forEach(f => {
       f.angle += f.speed;
       const x     = CX + Math.cos(f.angle) * (R - 2);
@@ -164,4 +160,4 @@
   if (window._decoRaf) cancelAnimationFrame(window._decoRaf);
   draw();
 })();
-  
+

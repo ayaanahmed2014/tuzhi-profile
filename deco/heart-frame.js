@@ -1,8 +1,4 @@
-/* ════════════════════════════════
-   TuZhi Deco — heart-frame (v2)
-   Clean premium hearts (no blink ring)
-   Soft glow + bigger hearts + smooth motion
-   ════════════════════════════════ */
+// TuZhi Codes deco name : "heart-frame"
 (function () {
   const cv = document.getElementById('decoCanvas');
   if (!cv) return;
@@ -17,7 +13,7 @@
 
   let t = 0, raf;
 
-  /* ── heart ── */
+
   function heart(x, y, s, a, glow = 10) {
     ctx.save();
     ctx.translate(x, y);
@@ -43,7 +39,7 @@
     ctx.restore();
   }
 
-  /* ── soft aura (NO BORDER BLINK) ── */
+
   function softAura() {
     const g = ctx.createRadialGradient(CX, CY, R - 20, CX, CY, R);
     g.addColorStop(0, 'rgba(255,107,157,0)');
@@ -56,7 +52,7 @@
     ctx.fill();
   }
 
-  /* ── floating particles ── */
+
   const particles = Array.from({ length: 10 }).map(() => ({
     a: Math.random() * Math.PI * 2,
     r: 28 + Math.random() * 16,
@@ -68,10 +64,10 @@
     ctx.clearRect(0, 0, W, H);
     t++;
 
-    /* 1. soft aura */
+
     softAura();
 
-    /* 2. main big hearts ring */
+
     const count = 8;
 
     for (let i = 0; i < count; i++) {
@@ -82,7 +78,7 @@
       heart(x, y, 1.05 * pulse, 0.95, 14);
     }
 
-    /* 3. inner mini hearts (depth) */
+
     for (let i = 0; i < 5; i++) {
       const ang = (i / 5) * Math.PI * 2 - t * 0.01;
       const x = CX + Math.cos(ang) * (R - 18);
@@ -90,7 +86,7 @@
       heart(x, y, 0.6, 0.35, 6);
     }
 
-    /* 4. floating particles */
+
     particles.forEach(p => {
       p.a += p.sp;
       const x = CX + Math.cos(p.a) * p.r;
@@ -103,7 +99,7 @@
       ctx.fill();
     });
 
-    /* 5. center soft pulse */
+
     const pulse = 0.15 + 0.1 * Math.sin(t * 0.03);
     ctx.beginPath();
     ctx.arc(CX, CY, R - 20, 0, Math.PI * 2);
@@ -117,4 +113,4 @@
   if (window._decoRaf) cancelAnimationFrame(window._decoRaf);
   draw();
 })();
-       
+
